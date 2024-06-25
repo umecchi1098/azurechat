@@ -33,4 +33,8 @@ next-env.d.ts
 
 .azure/
 infra/aad_setup.sh
+<<<<<<< HEAD
 .vscode/settings.json
+=======
+.vscode
+>>>>>>> upstream/main
