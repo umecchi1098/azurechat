@@ -75,7 +75,8 @@ const configureIdentityProvider = () => {
             id: hashValue(email),
             name: username,
             email: email,
-            isAdmin: false,
+            isAdmin:
+              adminEmails?.includes(email.toLowerCase()),
             image: "",
           };
           console.log(
