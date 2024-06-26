@@ -33,12 +33,12 @@ export const AddPromptSlider: FC<SliderProps> = (props) => {
   const PublicSwitch = () => {
     if (data === undefined || data === null) return null;
 
-    if (data?.user?.isAdmin) {
+    if (data?.user?.isAdmin || data?.user?.isPromptAdmin) {
       return (
-        <div className="flex items-center space-x-2">
-          <Switch name="isPublished" defaultChecked={prompt.isPublished} />
-          <Label htmlFor="description">Publish</Label>
-        </div>
+      <div className="flex items-center space-x-2">
+        <Switch name="isPublished" defaultChecked={prompt.isPublished} />
+        <Label htmlFor="description">Publish</Label>
+      </div>
       );
     }
   };

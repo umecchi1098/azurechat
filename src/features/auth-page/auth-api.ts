@@ -12,6 +12,12 @@ const configureIdentityProvider = () => {
     email.toLowerCase().trim()
   );
 
+  // Prompt admin email address is used to allow users to sign in with their email address
+  // and automatically be granted admin access if their email matches the prompt admin email address
+  const promptAdminEmails = process.env.PROMPT_ADMIN_EMAIL_ADDRESS?.split(",").map((email) =>
+    email.toLowerCase().trim()
+  );
+
   if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
     providers.push(
       GitHubProvider({
@@ -21,6 +27,7 @@ const configureIdentityProvider = () => {
           const newProfile = {
             ...profile,
             isAdmin: adminEmails?.includes(profile.email.toLowerCase()),
+            isPromptAdmin: promptAdminEmails?.includes(profile.email.toLowerCase()),
           };
           return newProfile;
         },
@@ -46,6 +53,9 @@ const configureIdentityProvider = () => {
             isAdmin:
               adminEmails?.includes(profile.email.toLowerCase()) ||
               adminEmails?.includes(profile.preferred_username.toLowerCase()),
+            isPromptAdmin:
+              promptAdminEmails?.includes(profile.email.toLowerCase()) ||
+              promptAdminEmails?.includes(profile.preferred_username.toLowerCase()),
           };
           return newProfile;
         },
@@ -77,6 +87,8 @@ const configureIdentityProvider = () => {
             email: email,
             isAdmin:
               adminEmails?.includes(email.toLowerCase()),
+            isPromptAdmin:
+              promptAdminEmails?.includes(email.toLowerCase()),
             image: "",
           };
           console.log(
@@ -100,10 +112,14 @@ export const options: NextAuthOptions = {
       if (user?.isAdmin) {
         token.isAdmin = user.isAdmin;
       }
+      if (user?.isPromptAdmin) {
+        token.isPromptAdmin = user.isPromptAdmin;
+      }
       return token;
     },
     async session({ session, token, user }) {
       session.user.isAdmin = token.isAdmin as boolean;
+      session.user.isPromptAdmin = token.isPromptAdmin as boolean;
       return session;
     },
   },

@@ -20,14 +20,14 @@ export const CreatePrompt = async (
   try {
     const user = await getCurrentUser();
 
-    if (!user.isAdmin) {
+    if (!user.isAdmin && !user.isPromptAdmin) {
       return {
-        status: "UNAUTHORIZED",
-        errors: [
-          {
-            message: `Unable to create prompt`,
-          },
-        ],
+      status: "UNAUTHORIZED",
+      errors: [
+        {
+          message: `Unable to create prompt`,
+        },
+      ],
       };
     }
 
@@ -35,7 +35,7 @@ export const CreatePrompt = async (
       id: uniqueId(),
       name: props.name,
       description: props.description,
-      isPublished: user.isAdmin ? props.isPublished : false,
+      isPublished: user.isAdmin || user.isPromptAdmin ? props.isPublished : false,
       userId: await userHashedId(),
       createdAt: new Date(),
       type: "PROMPT",
@@ -119,7 +119,7 @@ export const EnsurePromptOperation = async (
   const currentUser = await getCurrentUser();
 
   if (promptResponse.status === "OK") {
-    if (currentUser.isAdmin) {
+    if (currentUser.isAdmin || currentUser.isPromptAdmin) {
       return promptResponse;
     }
   }
@@ -227,7 +227,7 @@ export const UpsertPrompt = async (
         ...prompt,
         name: promptInput.name,
         description: promptInput.description,
-        isPublished: user.isAdmin
+        isPublished: (user.isAdmin || user.isPromptAdmin)
           ? promptInput.isPublished
           : prompt.isPublished,
         createdAt: new Date(),
