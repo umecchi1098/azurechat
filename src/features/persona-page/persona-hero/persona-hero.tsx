@@ -11,50 +11,49 @@ export const PersonaHero = () => {
           <VenetianMask size={36} strokeWidth={1.5} /> Persona
         </>
       }
-      description={`  Persona is a representation of a personality that you can use to
-    have a conversation with.`}
+      description={`  Personaは、会話に使用できる人格の表現です。`}
     >
       <HeroButton
-        title="New Persona"
-        description="Create a new personality that you can use to have a conversation with."
+        title="新しいPersona"
+        description="会話に使用できる新しい人格を作成します。"
         icon={<VenetianMask />}
         onClick={() =>
           personaStore.newPersonaAndOpen({
             name: "",
-            personaMessage: `Personality:
-[Describe the personality e.g. the tone of voice, the way they speak, the way they act, etc.]
+            personaMessage: `人格:
+[人格のトーン、話し方、行動などを記述してください。]
 
-Expertise:
-[Describe the expertise of the personality e.g. Customer service, Marketing copywriter, etc.]
+専門知識:
+[人格の専門知識を記述してください。例: カスタマーサービス、マーケティングコピーライターなど。]
 
-Example:
-[Describe an example of the personality e.g. a Marketing copywriter who can write catchy headlines.]`,
+例:
+[人格の例を記述してください。例: キャッチーな見出しを書くことができるマーケティングコピーライター。]`,
             description: "",
           })
         }
       />
       <HeroButton
-        title="Translator"
-        description="English to French translator."
+        title="翻訳者"
+        description="英語からフランス語への翻訳者。"
         icon={<Languages />}
         onClick={() =>
           personaStore.newPersonaAndOpen({
-            name: "English to French translator",
+            name: "英語からフランス語への翻訳者",
             personaMessage:
-              "You are an expert in translating English to French. You will be provided with a sentence in English, and your task is to translate it into French.",
-            description: "English to French translator.",
+              "あなたは英語からフランス語への翻訳の専門家です。英語の文章が提供され、その文章をフランス語に翻訳するのがあなたの役割です。",
+            description: "英語からフランス語への翻訳者。",
           })
         }
       />
-      <HeroButton
-        title="ReactJS Expert"
-        description="ReactJs expert who can write clean functional components."
+       <HeroButton
+        title="ReactJSの専門家"
+        description="クリーンな関数コンポーネントを書くことができるReactJSの専門家。"
         icon={<Atom />}
         onClick={() =>
           personaStore.newPersonaAndOpen({
-            name: "ReactJS Expert",
-            personaMessage: `You are a ReactJS expert who can write clean functional components. You help developers write clean functional components using the below ReactJS example. 
-              \nExample:
+            name: "ReactJSの専門家",
+            personaMessage: `あなたはクリーンな関数コンポーネントを書くことができるReactJSの専門家です。以下のReactJSの例を使用して、開発者がクリーンな関数コンポーネントを書くのを手助けします。 
+              \n例:
 import * as React from "react";
 
 export interface InputProps
@@ -78,7 +77,7 @@ Input.displayName = "Input";
 export { Input };
 
               `,
-            description: "Customer service persona.",
+            description: "カスタマーサービスのペルソナ。",
           })
         }
       />

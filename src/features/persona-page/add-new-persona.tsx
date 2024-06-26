@@ -80,33 +80,33 @@ export const AddNewPersona: FC<Props> = (props) => {
                 </>
               )}
               <div className="grid gap-2">
-                <Label>Name</Label>
+                <Label>名前</Label>
                 <Input
                   type="text"
                   required
                   name="name"
                   defaultValue={persona.name}
-                  placeholder="Name of your persona"
+                  placeholder="Personaの名前を入れてください。"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="description">Short description</Label>
+                <Label htmlFor="description">説明</Label>
                 <Input
                   type="text"
                   required
                   defaultValue={persona.description}
                   name="description"
-                  placeholder="Short description"
+                  placeholder="説明分を入力してください。"
                 />
               </div>
               <div className="grid gap-2 flex-1 ">
-                <Label htmlFor="personaMessage">Personality</Label>
+                <Label htmlFor="personaMessage">Personaの人格設定</Label>
                 <Textarea
                   className="min-h-[300px]"
                   required
                   defaultValue={persona.personaMessage}
                   name="personaMessage"
-                  placeholder="Personality of your persona"
+                  placeholder="あなたのPersonaの人格を入力してください。"
                 />
               </div>
             </div>
@@ -125,7 +125,7 @@ function Submit() {
   return (
     <Button disabled={status.pending} className="gap-2">
       <LoadingIndicator isLoading={status.pending} />
-      Save
+      保存
     </Button>
   );
 }

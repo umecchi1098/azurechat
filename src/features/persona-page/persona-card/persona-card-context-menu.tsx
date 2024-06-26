@@ -40,13 +40,13 @@ export const PersonaCardContextMenu: FC<Props> = (props) => {
             onClick={() => personaStore.updatePersona(props.persona)}
           >
             <Pencil size={18} />
-            <span>Edit</span>
+            <span>編集</span>
           </DropdownMenuItemWithIcon>
           <DropdownMenuItemWithIcon
             onClick={async () => await handleAction("delete")}
           >
             <Trash size={18} />
-            <span>Delete</span>
+            <span>削除</span>
           </DropdownMenuItemWithIcon>
         </DropdownMenuContent>
       </DropdownMenu>

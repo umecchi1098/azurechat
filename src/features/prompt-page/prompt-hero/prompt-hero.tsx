@@ -12,26 +12,28 @@ export const PromptHero = () => {
         </>
       }
       description={
-        "Prompt templates are statements or questions meant to help users get creative without having to come up with ideas from scratch."
+        `プロンプトテンプレートは、ユーザーが新しいアイデアを生み出す際に役立つヒントや質問です。
+プロンプトテンプレートの追加は管理者のみが行えます。
+        `
       }
     >
       <HeroButton
-        title="Add New Prompt"
-        description="Build your own prompt template"
+        title="新しいプロンプトを追加"
+        description="独自のプロンプトテンプレートを作成する"
         icon={<Book />}
         onClick={() => promptStore.newPrompt()}
       />
       <HeroButton
-        title="Whimsical City"
-        description="Image of miniature colourful city "
+        title="夢幻的な街"
+        description="ミニチュアでカラフルな街の画像"
         icon={<BookImage />}
         onClick={() =>
           promptStore.updatePrompt({
             createdAt: new Date(),
             id: "",
-            name: "Whimsical City",
+            name: "夢幻的な街",
             description:
-              "Create A miniature city with colourful buildings and green trees with [iconic building]. The [iconic building] is in the centre of the image, surrounded by a blurred background with lots of [Native tree name] trees. The image has a dreamy and whimsical mood, with a shallow depth of field and a high angle view. The city looks like a toy or a model, with different styles and shapes of buildings.",
+              "カラフルな建物と緑の木々があるミニチュアの街を作成します。画像の中心には[iconic building]があり、周囲にはぼやけた背景と多くの[Native tree name]の木があります。画像は夢幻的で夢のような雰囲気があり、浅い被写界深度と高い視点で撮影されています。街はおもちゃやモデルのように見え、さまざまなスタイルと形の建物があります。",
             isPublished: false,
             type: "PROMPT",
             userId: "",
@@ -39,26 +41,26 @@ export const PromptHero = () => {
         }
       />
       <HeroButton
-        title="Problem Framing"
-        description="Problem Framing for a new product"
+        title="問題の構成"
+        description="新製品の問題の構成"
         icon={<NotebookPen />}
         onClick={() =>
           promptStore.updatePrompt({
             createdAt: new Date(),
             id: "",
-            name: "Problem Framing",
+            name: "問題の構成",
             description: `
-Given the following problem statement:
-[PROBLEM STATEMENT]
+以下の問題文を考慮してください：
+[問題文]
 
-Generate a response with the following points:
-1. Problem framing
-2. Solution overview and recommendations 
-3. List down the recommended MVP Scope
-4. How to ensure user adoption
-5. How to measure success 
-8. List down similar products
-9. Potential sponsor question (5 questions) 
+次のポイントを含む応答を生成してください：
+1. 問題の構成
+2. 解決策の概要と推奨事項
+3. 推奨されるMVPの範囲をリストアップ
+4. ユーザーの採用を確実にする方法
+5. 成功を測定する方法
+8. 類似製品をリストアップ
+9. 潜在的なスポンサーの質問（5つの質問）
               `,
             isPublished: false,
             type: "PROMPT",

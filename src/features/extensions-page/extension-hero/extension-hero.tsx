@@ -15,8 +15,7 @@ export const ExtensionHero = () => {
           <PocketKnife size={36} strokeWidth={1.5} /> Extensions
         </>
       }
-      description={`Seamlessly connect ${AI_NAME} with internal APIs or external
-        resources`}
+      description={`シームレスに${AI_NAME}を内部APIや外部リソースと接続します。`}
     >
       <NewExtension />
       <BingSearch />
