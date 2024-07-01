@@ -50,6 +50,7 @@ export const usePromptState = () => {
   });
 };
 
+// Promptの追加・更新を行うメソッド
 export const addOrUpdatePrompt = async (
   previous: any,
   formData: FormData
@@ -60,7 +61,9 @@ export const addOrUpdatePrompt = async (
 
   const response =
     model.id && model.id !== ""
+      // PromptのIDが存在する場合は更新処理を行う
       ? await UpsertPrompt(model)
+      // PromptのIDが存在しない場合は新規追加処理を行う
       : await CreatePrompt(model);
 
   if (response.status === "OK") {

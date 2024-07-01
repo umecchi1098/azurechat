@@ -25,7 +25,7 @@ export const PromptCard: FC<Props> = (props) => {
             <PromptCardContextMenu prompt={prompt} />
           </div>
         )}
-      
+
       </CardHeader>
       <CardContent className="text-muted-foreground flex-1">
         {prompt.description.length > 100
