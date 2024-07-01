@@ -78,6 +78,8 @@ export const CreatePrompt = async (
   }
 };
 
+// 全Promptを取得
+// TODO: isPublishedがtrueまたはUserIdが一致するもののみ取得する
 export const FindAllPrompts = async (): Promise<
   ServerActionResponse<Array<PromptModel>>
 > => {
@@ -112,6 +114,52 @@ export const FindAllPrompts = async (): Promise<
   }
 };
 
+// 現在のユーザー用に公開されたプロンプトと、userIdが一致するプロンプトを取得する
+// 現在のユーザーは自分が作成したものと公開されたものを取得する
+export const FindAllPromptsForCurrentUser = async (): Promise<
+ServerActionResponse<Array<PromptModel>>
+> => {
+  try {
+    const querySpec: SqlQuerySpec = {
+      query:
+        "SELECT * FROM root r WHERE r.type=@type AND (r.isPublished=@isPublished OR r.userId=@userId) ORDER BY r.createdAt DESC",
+      parameters: [
+        {
+          name: "@type",
+          value: PROMPT_ATTRIBUTE,
+        },
+        {
+          name: "@isPublished",
+          value: true,
+        },
+        {
+          name: "@userId",
+          value: await userHashedId(),
+        },
+      ],
+    };
+
+    const { resources } = await ConfigContainer()
+      .items.query<PromptModel>(querySpec)
+      .fetchAll();
+
+    return {
+      status: "OK",
+      response: resources,
+    };
+  } catch (error) {
+    return {
+      status: "ERROR",
+      errors: [
+        {
+          message: `Error retrieving prompt: ${error}`,
+        },
+      ],
+    };
+  }
+};
+
+// 
 export const EnsurePromptOperation = async (
   promptId: string
 ): Promise<ServerActionResponse<PromptModel>> => {
