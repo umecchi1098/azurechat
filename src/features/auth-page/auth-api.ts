@@ -12,12 +12,14 @@ const configureIdentityProvider = () => {
     email.toLowerCase().trim()
   );
 
-  // Prompt admin email address is used to allow users to sign in with their email address
-  // and automatically be granted admin access if their email matches the prompt admin email address
+  // プロンプト管理者のメールアドレスは、ユーザーが自分のメールアドレスでサインインし、
+  // メールアドレスがプロンプト管理者のメールアドレスと一致する場合に自動的に管理者アクセスが付与されるように使用されます
   const promptAdminEmails = process.env.PROMPT_ADMIN_EMAIL_ADDRESS?.split(",").map((email) =>
     email.toLowerCase().trim()
   );
 
+
+  // GitHub認証を選択した場合、環境変数に設定されたクライアントIDとクライアントシークレットを使用してプロバイダーを構成します
   if (process.env.AUTH_GITHUB_ID && process.env.AUTH_GITHUB_SECRET) {
     providers.push(
       GitHubProvider({
@@ -35,6 +37,7 @@ const configureIdentityProvider = () => {
     );
   }
 
+  // Azure AD認証を選択した場合、環境変数に設定されたクライアントID、クライアントシークレット、テナントIDを使用してプロバイダーを構成します
   if (
     process.env.AZURE_AD_CLIENT_ID &&
     process.env.AZURE_AD_CLIENT_SECRET &&
@@ -76,9 +79,9 @@ const configureIdentityProvider = () => {
           password: { label: "Password", type: "password" },
         },
         async authorize(credentials, req): Promise<any> {
-          // You can put logic here to validate the credentials and return a user.
-          // We're going to take any username and make a new user with it
-          // Create the id as the hash of the email as per userHashedId (helpers.ts)
+            // 資格情報を検証し、ユーザーを返すためのロジックをここに記述できます。
+            // ここでは、任意のユーザー名を使用して新しいユーザーを作成します。
+            // ユーザーのIDは、ユーザーのメールアドレスのハッシュ値として作成します（helpers.tsのuserHashedIdを参照）
           const username = credentials?.username || "dev";
           const email = username + "@localhost";
           const user = {
@@ -87,6 +90,7 @@ const configureIdentityProvider = () => {
             email: email,
             isAdmin:
               adminEmails?.includes(email.toLowerCase()),
+            // 追加分：Prompt管理者のメールアドレスを使用して、Prompt管理者としてログインできるようにします
             isPromptAdmin:
               promptAdminEmails?.includes(email.toLowerCase()),
             image: "",
