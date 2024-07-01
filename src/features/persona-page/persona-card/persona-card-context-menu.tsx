@@ -63,7 +63,7 @@ const useDropdownAction = (props: { persona: PersonaModel }) => {
     switch (action) {
       case "delete":
         if (
-          window.confirm(`Are you sure you want to delete ${persona.name}?`)
+          window.confirm(`「${persona.name}」を削除してもよろしいですか？`)
         ) {
           await DeletePersona(persona.id);
           RevalidateCache({

@@ -63,7 +63,7 @@ const useDropdownAction = (props: { extension: ExtensionModel }) => {
     switch (action) {
       case "delete":
         if (
-          window.confirm(`Are you sure you want to delete ${extension.name}?`)
+          window.confirm(`「${extension.name}」を削除してもよろしいですか？`)
         ) {
           await DeleteExtension(extension.id);
           RevalidateCache({
