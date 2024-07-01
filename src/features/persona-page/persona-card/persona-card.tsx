@@ -10,6 +10,7 @@ import { PersonaModel } from "../persona-services/models";
 import { PersonaCardContextMenu } from "./persona-card-context-menu";
 import { ViewPersona } from "./persona-view";
 import { StartNewPersonaChat } from "./start-new-persona-chat";
+import { GlobeIcon, UserIcon } from "lucide-react";
 
 interface Props {
   persona: PersonaModel;
@@ -21,6 +22,12 @@ export const PersonaCard: FC<Props> = (props) => {
   return (
     <Card key={persona.id} className="flex flex-col">
       <CardHeader className="flex flex-row">
+
+        {persona.isPublished
+          ? <GlobeIcon size={20} className="mr-2" />
+          : <UserIcon size={20} className="mr-2" />
+        }
+
         <CardTitle className="flex-1">{persona.name}</CardTitle>
         {props.showContextMenu && (
           <div>
