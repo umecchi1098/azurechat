@@ -1,9 +1,10 @@
 import { PromptModel } from "@/features/prompt-page/models";
-import { FindAllPrompts } from "@/features/prompt-page/prompt-service";
+import { FindAllPrompts, FindAllPromptsForCurrentUser } from "@/features/prompt-page/prompt-service";
 import { proxy, useSnapshot } from "valtio";
 import { chatStore } from "../../chat-store";
 import { SetInputRowsToMax } from "../use-chat-input-dynamic-height";
 
+// Promptの選択肢を管理するStore
 class InputPromptState {
   public errors: string[] = [];
   public prompts: Array<PromptModel> = [];
@@ -15,7 +16,10 @@ class InputPromptState {
     this.isLoading = true;
     this.errors = [];
 
-    const response = await FindAllPrompts();
+    // Promptの取得処理
+    // 全件取得から、現在のユーザー用に公開されたプロンプトと、userIdが一致するプロンプトを取得するように変更
+    // const response = await FindAllPrompts();
+    const response = await FindAllPromptsForCurrentUser();
 
     if (response.status === "OK") {
       this.prompts = response.response;

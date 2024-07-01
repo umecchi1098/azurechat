@@ -43,6 +43,7 @@ export const PromptSlider: FC<SliderProps> = (props) => {
         <SheetHeader>
           <SheetTitle>Prompt Library</SheetTitle>
         </SheetHeader>
+
         <ScrollArea className="flex-1 flex -mx-6">
           <div className="px-6 pb-6 whitespace-pre-wrap">
             <SheetDescription>
@@ -65,6 +66,7 @@ export const PromptSlider: FC<SliderProps> = (props) => {
             ))}
           </div>
         </ScrollArea>
+
       </SheetContent>
     </Sheet>
   );
