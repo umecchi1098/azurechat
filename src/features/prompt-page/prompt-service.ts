@@ -14,22 +14,24 @@ import { getCurrentUser, userHashedId } from "../auth-page/helpers";
 import { ConfigContainer } from "../common/services/cosmos";
 import { uniqueId } from "../common/util";
 
+// Promptを新規作成する。
 export const CreatePrompt = async (
   props: PromptModel
 ): Promise<ServerActionResponse<PromptModel>> => {
   try {
     const user = await getCurrentUser();
 
-    if (!user.isAdmin && !user.isPromptAdmin) {
-      return {
-      status: "UNAUTHORIZED",
-      errors: [
-        {
-          message: `Unable to create prompt`,
-        },
-      ],
-      };
-    }
+    // Prompt管理者チェックを無効化
+    // if (!user.isAdmin && !user.isPromptAdmin) {
+    //   return {
+    //   status: "UNAUTHORIZED",
+    //   errors: [
+    //     {
+    //       message: `Unable to create prompt`,
+    //     },
+    //   ],
+    //   };
+    // }
 
     const modelToSave: PromptModel = {
       id: uniqueId(),
@@ -47,6 +49,7 @@ export const CreatePrompt = async (
       return valid;
     }
 
+    // CosmosDBへの保存処理
     const { resource } = await ConfigContainer().items.create<PromptModel>(
       modelToSave
     );
@@ -159,15 +162,18 @@ ServerActionResponse<Array<PromptModel>>
   }
 };
 
-// 
+// Promptの操作権限を確認する処理
+// 現在のユーザーがPromptの作成者またはPrompt管理者であれば編集が可能
 export const EnsurePromptOperation = async (
   promptId: string
 ): Promise<ServerActionResponse<PromptModel>> => {
   const promptResponse = await FindPromptByID(promptId);
   const currentUser = await getCurrentUser();
 
+  // Promptが見つかった場合、Promptの作成者またはPrompt管理者であれば編集が可能
   if (promptResponse.status === "OK") {
-    if (currentUser.isAdmin || currentUser.isPromptAdmin) {
+    const prompt = promptResponse.response;
+    if (currentUser.isAdmin || currentUser.isPromptAdmin || prompt.userId === await userHashedId()) {
       return promptResponse;
     }
   }
@@ -182,6 +188,7 @@ export const EnsurePromptOperation = async (
   };
 };
 
+// Promptの削除処理
 export const DeletePrompt = async (
   promptId: string
 ): Promise<ServerActionResponse<PromptModel>> => {
@@ -261,10 +268,12 @@ export const FindPromptByID = async (
   }
 };
 
+// Promptの更新処理
 export const UpsertPrompt = async (
   promptInput: PromptModel
 ): Promise<ServerActionResponse<PromptModel>> => {
   try {
+    // Promptの操作権限を確認
     const promptResponse = await EnsurePromptOperation(promptInput.id);
 
     if (promptResponse.status === "OK") {
@@ -286,6 +295,7 @@ export const UpsertPrompt = async (
         return validationResponse;
       }
 
+      // CosmosDBへの更新処理
       const { resource } = await ConfigContainer().items.upsert<PromptModel>(
         modelToUpdate
       );
