@@ -43,8 +43,8 @@ export const ViewPersona: FC<Props> = (props) => {
               />
               <p className="text-xs text-muted-foreground">
                 {persona.isPublished
-                  ? `This is published and everyone in your organisation can use ${persona.name} persona`
-                  : "This is only visible to you"}
+                  ? `これは公開されており、組織内の全員が${persona.name}ペルソナを使用できます`
+                  : "これはあなただけに表示されます"}
               </p>
             </div>
           </div>

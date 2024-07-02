@@ -29,6 +29,7 @@ export const ChatHome: FC<ChatPersonaProps> = (props) => {
                 alt="ai-icon"
               />{" "}
               {AI_NAME}
+              <span className="text-muted-foreground text-sm">Powered by GPT-4o</span>
             </>
           }
           description={AI_DESCRIPTION}
