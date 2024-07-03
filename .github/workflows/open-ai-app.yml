@@ -4,7 +4,7 @@ name: Build & deploy Next.js app to Azure Web App
 on:
   # Automatically trigger it when detected changes in repo
   push:
-    branches: [main]
+    branches: [main, develop]
 
   # Allow manual workflow trigger
   workflow_dispatch:
@@ -58,8 +58,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: Production
+    environment: ${{ github.ref == 'refs/heads/main' && 'Production' || 'Develop' }}
 
     steps:
       - name: 🍏 Set up Node.js version
