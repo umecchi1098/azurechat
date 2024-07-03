@@ -1,7 +1,8 @@
 {
   "name": "Azure Chat Solution Accelerator powered by Azure Open AI Service",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18-bullseye",
+  // "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18-bullseye",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20-bullseye",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
@@ -51,7 +52,7 @@
   // More info: https://containers.dev/implementors/json_reference/#port-attributes
   "portsAttributes": {
   	"3000": {
-  		"label": "Hello Remote World",
+  		"label": "AzureChat",
   		"onAutoForward": "notify"
   	}
   }
