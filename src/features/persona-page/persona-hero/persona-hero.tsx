@@ -11,7 +11,10 @@ export const PersonaHero = () => {
           <VenetianMask size={36} strokeWidth={1.5} /> Persona
         </>
       }
-      description={`  Personaは、会話に使用できる人格の表現です。`}
+      description={`  Persona（ペルソナ）は、シスにゃんに人格を設定することができます。
+        特定の役割を持たせたり、何かの専門家として振るわせたりすることができます。
+        以下のボタンをクリックして、新しいPersonaを作成するか、既存のPersonaを開いて編集します。
+      `}
     >
       <HeroButton
         title="新しいPersona"

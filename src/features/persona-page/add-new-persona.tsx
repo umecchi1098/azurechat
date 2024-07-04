@@ -96,7 +96,7 @@ export const AddNewPersona: FC<Props> = (props) => {
                   required
                   defaultValue={persona.description}
                   name="description"
-                  placeholder="説明分を入力してください。"
+                  placeholder="説明を入力してください。"
                 />
               </div>
               <div className="grid gap-2 flex-1 ">
