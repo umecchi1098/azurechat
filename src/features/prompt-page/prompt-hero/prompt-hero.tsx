@@ -1,9 +1,14 @@
 "use client";
 import { Hero, HeroButton } from "@/features/ui/hero";
-import { Book, BookImage, NotebookPen } from "lucide-react";
+import { Book, BookImage, NotebookPen, Globe } from "lucide-react";
 import { promptStore } from "../prompt-store";
+import { Card } from "@/features/ui/card";
 
 export const PromptHero = () => {
+  const handleLinkClick = (url: string) => {
+    window.open(url, "_blank");
+  };
+
   return (
     <Hero
       title={
@@ -17,6 +22,12 @@ export const PromptHero = () => {
         全ユーザーに公開されたプロンプトに加え、自分専用のプロンプトを作ることができます。`
       }
     >
+      <HeroButton 
+        title="Prompt Engineering Guide"
+        description="[外部サイト]プロンプトエンジニアリングガイド"
+        icon={<Globe />}
+        onClick={() => handleLinkClick("https://www.promptingguide.ai/jp")}
+      />
       <HeroButton
         title="新しいプロンプトを追加"
         description="独自のプロンプトテンプレートを作成する"
