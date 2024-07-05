@@ -1,3 +1,5 @@
+// ホーム画面のコンポーネント
+// ホーム画面には、AIの説明、拡張機能、ペルソナの一覧が表示される
 import { AddExtension } from "@/features/extensions-page/add-extension/add-new-extension";
 import { ExtensionCard } from "@/features/extensions-page/extension-card/extension-card";
 import { ExtensionModel } from "@/features/extensions-page/extension-services/models";
@@ -8,6 +10,7 @@ import { Hero } from "@/features/ui/hero";
 import { ScrollArea } from "@/features/ui/scroll-area";
 import Image from "next/image";
 import { FC } from "react";
+import { PocketKnife, VenetianMask } from "lucide-react";
 
 interface ChatPersonaProps {
   personas: PersonaModel[];
@@ -36,8 +39,11 @@ export const ChatHome: FC<ChatPersonaProps> = (props) => {
         ></Hero>
         <div className="container max-w-4xl flex gap-20 flex-col">
           <div>
-            <h2 className="text-2xl font-bold mb-3">Extensions</h2>
-
+            <h2 className="flex flex-row text-2xl font-bold mb-3">
+              <PocketKnife className="mr-2" />Extentions
+              <span className="flex items-end text-muted-foreground text-sm ml-2">拡張機能からチャットをはじめる</span>
+            </h2>
+            <h3 className="text-muted-foreground text-sm my-2">拡張機能を使うと、機能を追加したAIとチャットができます。</h3>
             {props.extensions && props.extensions.length > 0 ? (
               <div className="grid grid-cols-3 gap-3">
                 {props.extensions.map((extension) => {
@@ -56,7 +62,11 @@ export const ChatHome: FC<ChatPersonaProps> = (props) => {
 
           </div>
           <div>
-            <h2 className="text-2xl font-bold mb-3">Personas</h2>
+            <h2 className="flex flex-row text-2xl font-bold mb-3 ">
+              <VenetianMask className="mr-2" />Personas
+              <span className="flex items-end text-muted-foreground text-sm ml-2">ペルソナからチャットをはじめる</span>
+            </h2>
+            <h3 className="flex text-muted-foreground text-sm my-2">ペルソナを使うと、AIに役割や人格を与えることができます。</h3>
 
             {props.personas && props.personas.length > 0 ? (
               <div className="grid grid-cols-3 gap-3">
