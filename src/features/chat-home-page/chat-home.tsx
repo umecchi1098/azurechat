@@ -10,7 +10,9 @@ import { Hero } from "@/features/ui/hero";
 import { ScrollArea } from "@/features/ui/scroll-area";
 import Image from "next/image";
 import { FC } from "react";
-import { PocketKnife, VenetianMask } from "lucide-react";
+import { MessageCircle, PocketKnife, VenetianMask } from "lucide-react";
+import { CreateChatAndRedirect } from "../chat-page/chat-services/chat-thread-service";
+import { NewChat } from "../chat-page/chat-menu/new-chat";
 
 interface ChatPersonaProps {
   personas: PersonaModel[];
@@ -37,7 +39,20 @@ export const ChatHome: FC<ChatPersonaProps> = (props) => {
           }
           description={AI_DESCRIPTION}
         ></Hero>
+
         <div className="container max-w-4xl flex gap-20 flex-col">
+
+          <div>
+            <h2 className="flex flex-row text-2xl font-bold mb-3">
+              <MessageCircle className="mr-2" />New Chat
+              <span className="flex items-end text-muted-foreground text-sm ml-2">新規チャットをはじめる</span>
+            </h2>
+            <h3 className="text-muted-foreground text-sm my-2">拡張機能やペルソナを使用しない標準のチャットです。</h3>
+              <form action={CreateChatAndRedirect} className="flex gap-2 pr-3">
+                <NewChat />
+              </form>
+          </div>
+
           <div>
             <h2 className="flex flex-row text-2xl font-bold mb-3">
               <PocketKnife className="mr-2" />Extentions
@@ -61,6 +76,7 @@ export const ChatHome: FC<ChatPersonaProps> = (props) => {
             }
 
           </div>
+
           <div>
             <h2 className="flex flex-row text-2xl font-bold mb-3 ">
               <VenetianMask className="mr-2" />Personas
