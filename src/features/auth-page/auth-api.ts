@@ -28,8 +28,10 @@ const configureIdentityProvider = () => {
         async profile(profile) {
           const newProfile = {
             ...profile,
-            isAdmin: adminEmails?.includes(profile.email.toLowerCase()),
-            isPromptAdmin: promptAdminEmails?.includes(profile.email.toLowerCase()),
+            isAdmin:
+              adminEmails?.includes(profile.email?.toLowerCase?.() ?? ""),
+            isPromptAdmin:
+              promptAdminEmails?.includes(profile.email?.toLowerCase?.() ?? ""),
           };
           return newProfile;
         },
@@ -49,16 +51,17 @@ const configureIdentityProvider = () => {
         clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
         tenantId: process.env.AZURE_AD_TENANT_ID!,
         async profile(profile) {
+          const email = (profile as any).email || (profile as any).preferred_username || "";
           const newProfile = {
             ...profile,
-            // throws error without this - unsure of the root cause (https://stackoverflow.com/questions/76244244/profile-id-is-missing-in-google-oauth-profile-response-nextauth)
-            id: profile.sub,
+            email,
+            id: (profile as any).sub,
             isAdmin:
-              adminEmails?.includes(profile.email.toLowerCase()) ||
-              adminEmails?.includes(profile.preferred_username.toLowerCase()),
+              adminEmails?.includes((profile as any).email?.toLowerCase?.() ?? "") ||
+              adminEmails?.includes((profile as any).preferred_username?.toLowerCase?.() ?? ""),
             isPromptAdmin:
-              promptAdminEmails?.includes(profile.email.toLowerCase()) ||
-              promptAdminEmails?.includes(profile.preferred_username.toLowerCase()),
+              promptAdminEmails?.includes((profile as any).email?.toLowerCase?.() ?? "") ||
+              promptAdminEmails?.includes((profile as any).preferred_username?.toLowerCase?.() ?? ""),
           };
           return newProfile;
         },
@@ -88,16 +91,14 @@ const configureIdentityProvider = () => {
             id: hashValue(email),
             name: username,
             email: email,
-            isAdmin:
-              adminEmails?.includes(email.toLowerCase()),
-            // 追加分：Prompt管理者のメールアドレスを使用して、Prompt管理者としてログインできるようにします
-            isPromptAdmin:
-              promptAdminEmails?.includes(email.toLowerCase()),
+            isAdmin: adminEmails?.includes(email.toLowerCase()),
+            isPromptAdmin: promptAdminEmails?.includes(email.toLowerCase()),
             image: "",
           };
           console.log(
             "=== DEV USER LOGGED IN:\n",
-            JSON.stringify(user, null, 2)
+            JSON.stringify(user, null, 2,
+            )
           );
           return user;
         },
@@ -107,6 +108,9 @@ const configureIdentityProvider = () => {
 
   return providers;
 };
+
+// 省略: プロフィール画像の取得は必須ではないため未実装
+
 
 export const options: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
