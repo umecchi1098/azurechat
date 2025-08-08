@@ -8,13 +8,13 @@ import { hashValue } from "./helpers";
 const configureIdentityProvider = () => {
   const providers: Array<Provider> = [];
 
-  const adminEmails = process.env.ADMIN_EMAIL_ADDRESS?.split(",").map((email) =>
+  const adminEmails = process.env.ADMIN_EMAIL_ADDRESS?.split(",").map((email: string) =>
     email.toLowerCase().trim()
   );
 
   // プロンプト管理者のメールアドレスは、ユーザーが自分のメールアドレスでサインインし、
   // メールアドレスがプロンプト管理者のメールアドレスと一致する場合に自動的に管理者アクセスが付与されるように使用されます
-  const promptAdminEmails = process.env.PROMPT_ADMIN_EMAIL_ADDRESS?.split(",").map((email) =>
+  const promptAdminEmails = process.env.PROMPT_ADMIN_EMAIL_ADDRESS?.split(",").map((email: string) =>
     email.toLowerCase().trim()
   );
 
@@ -25,11 +25,15 @@ const configureIdentityProvider = () => {
       GitHubProvider({
         clientId: process.env.AUTH_GITHUB_ID!,
         clientSecret: process.env.AUTH_GITHUB_SECRET!,
-        async profile(profile) {
-          const newProfile = {
+        async profile(profile: any) {
+          const image = await fetchProfilePicture(profile.avatar_url, null);
+          const newProfile: any = {
             ...profile,
-            isAdmin: adminEmails?.includes(profile.email.toLowerCase()),
-            isPromptAdmin: promptAdminEmails?.includes(profile.email.toLowerCase()),
+            isAdmin:
+              adminEmails?.includes(profile.email?.toLowerCase?.() ?? ""),
+            isPromptAdmin:
+              promptAdminEmails?.includes(profile.email?.toLowerCase?.() ?? ""),
+            image,
           };
           return newProfile;
         },
@@ -48,17 +52,28 @@ const configureIdentityProvider = () => {
         clientId: process.env.AZURE_AD_CLIENT_ID!,
         clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
         tenantId: process.env.AZURE_AD_TENANT_ID!,
-        async profile(profile) {
-          const newProfile = {
+        authorization: {
+          params: {
+            scope: "openid profile User.Read",
+          },
+        },
+        async profile(profile: any, tokens: any) {
+          const email = profile.email || profile.preferred_username || "";
+          const image = await fetchProfilePicture(
+            `https://graph.microsoft.com/v1.0/me/photos/48x48/$value`,
+            tokens?.access_token
+          );
+          const newProfile: any = {
             ...profile,
-            // throws error without this - unsure of the root cause (https://stackoverflow.com/questions/76244244/profile-id-is-missing-in-google-oauth-profile-response-nextauth)
+            email,
             id: profile.sub,
             isAdmin:
-              adminEmails?.includes(profile.email.toLowerCase()) ||
-              adminEmails?.includes(profile.preferred_username.toLowerCase()),
+              adminEmails?.includes(profile.email?.toLowerCase?.() ?? "") ||
+              adminEmails?.includes(profile.preferred_username?.toLowerCase?.() ?? ""),
             isPromptAdmin:
-              promptAdminEmails?.includes(profile.email.toLowerCase()) ||
-              promptAdminEmails?.includes(profile.preferred_username.toLowerCase()),
+              promptAdminEmails?.includes(profile.email?.toLowerCase?.() ?? "") ||
+              promptAdminEmails?.includes(profile.preferred_username?.toLowerCase?.() ?? ""),
+            image,
           };
           return newProfile;
         },
@@ -88,16 +103,14 @@ const configureIdentityProvider = () => {
             id: hashValue(email),
             name: username,
             email: email,
-            isAdmin:
-              adminEmails?.includes(email.toLowerCase()),
-            // 追加分：Prompt管理者のメールアドレスを使用して、Prompt管理者としてログインできるようにします
-            isPromptAdmin:
-              promptAdminEmails?.includes(email.toLowerCase()),
+            isAdmin: adminEmails?.includes(email.toLowerCase()),
+            isPromptAdmin: promptAdminEmails?.includes(email.toLowerCase()),
             image: "",
           };
           console.log(
             "=== DEV USER LOGGED IN:\n",
-            JSON.stringify(user, null, 2)
+            JSON.stringify(user, null, 2,
+            )
           );
           return user;
         },
@@ -107,6 +120,29 @@ const configureIdentityProvider = () => {
 
   return providers;
 };
+
+export const fetchProfilePicture = async (
+  profilePictureUrl: string,
+  accessToken: string | null
+): Promise<string | null> => {
+  try {
+    const res = await fetch(
+      profilePictureUrl,
+      accessToken
+        ? {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        : undefined
+    );
+    if (!res.ok) return null;
+    const buf = await res.arrayBuffer();
+    const base64 = Buffer.from(buf).toString("base64");
+    return `data:image/jpeg;base64,${base64}`;
+  } catch {
+    return null;
+  }
+};
+
 
 export const options: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,

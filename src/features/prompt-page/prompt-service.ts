@@ -21,17 +21,17 @@ export const CreatePrompt = async (
   try {
     const user = await getCurrentUser();
 
-    // Prompt管理者チェックを無効化
-    // if (!user.isAdmin && !user.isPromptAdmin) {
-    //   return {
-    //   status: "UNAUTHORIZED",
-    //   errors: [
-    //     {
-    //       message: `Unable to create prompt`,
-    //     },
-    //   ],
-    //   };
-    // }
+    // Admin または PromptAdmin のみ作成可
+    if (!user.isAdmin && !user.isPromptAdmin) {
+      return {
+        status: "UNAUTHORIZED",
+        errors: [
+          {
+            message: `Unable to create prompt`,
+          },
+        ],
+      };
+    }
 
     const modelToSave: PromptModel = {
       id: uniqueId(),
