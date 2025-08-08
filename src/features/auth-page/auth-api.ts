@@ -8,13 +8,13 @@ import { hashValue } from "./helpers";
 const configureIdentityProvider = () => {
   const providers: Array<Provider> = [];
 
-  const adminEmails = process.env.ADMIN_EMAIL_ADDRESS?.split(",").map((email) =>
+  const adminEmails = process.env.ADMIN_EMAIL_ADDRESS?.split(",").map((email: string) =>
     email.toLowerCase().trim()
   );
 
   // プロンプト管理者のメールアドレスは、ユーザーが自分のメールアドレスでサインインし、
   // メールアドレスがプロンプト管理者のメールアドレスと一致する場合に自動的に管理者アクセスが付与されるように使用されます
-  const promptAdminEmails = process.env.PROMPT_ADMIN_EMAIL_ADDRESS?.split(",").map((email) =>
+  const promptAdminEmails = process.env.PROMPT_ADMIN_EMAIL_ADDRESS?.split(",").map((email: string) =>
     email.toLowerCase().trim()
   );
 
@@ -25,13 +25,15 @@ const configureIdentityProvider = () => {
       GitHubProvider({
         clientId: process.env.AUTH_GITHUB_ID!,
         clientSecret: process.env.AUTH_GITHUB_SECRET!,
-        async profile(profile) {
-          const newProfile = {
+        async profile(profile: any) {
+          const image = await fetchProfilePicture(profile.avatar_url, null);
+          const newProfile: any = {
             ...profile,
             isAdmin:
               adminEmails?.includes(profile.email?.toLowerCase?.() ?? ""),
             isPromptAdmin:
               promptAdminEmails?.includes(profile.email?.toLowerCase?.() ?? ""),
+            image,
           };
           return newProfile;
         },
@@ -50,18 +52,28 @@ const configureIdentityProvider = () => {
         clientId: process.env.AZURE_AD_CLIENT_ID!,
         clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
         tenantId: process.env.AZURE_AD_TENANT_ID!,
-        async profile(profile) {
-          const email = (profile as any).email || (profile as any).preferred_username || "";
-          const newProfile = {
+        authorization: {
+          params: {
+            scope: "openid profile User.Read",
+          },
+        },
+        async profile(profile: any, tokens: any) {
+          const email = profile.email || profile.preferred_username || "";
+          const image = await fetchProfilePicture(
+            `https://graph.microsoft.com/v1.0/me/photos/48x48/$value`,
+            tokens?.access_token
+          );
+          const newProfile: any = {
             ...profile,
             email,
-            id: (profile as any).sub,
+            id: profile.sub,
             isAdmin:
-              adminEmails?.includes((profile as any).email?.toLowerCase?.() ?? "") ||
-              adminEmails?.includes((profile as any).preferred_username?.toLowerCase?.() ?? ""),
+              adminEmails?.includes(profile.email?.toLowerCase?.() ?? "") ||
+              adminEmails?.includes(profile.preferred_username?.toLowerCase?.() ?? ""),
             isPromptAdmin:
-              promptAdminEmails?.includes((profile as any).email?.toLowerCase?.() ?? "") ||
-              promptAdminEmails?.includes((profile as any).preferred_username?.toLowerCase?.() ?? ""),
+              promptAdminEmails?.includes(profile.email?.toLowerCase?.() ?? "") ||
+              promptAdminEmails?.includes(profile.preferred_username?.toLowerCase?.() ?? ""),
+            image,
           };
           return newProfile;
         },
@@ -109,7 +121,27 @@ const configureIdentityProvider = () => {
   return providers;
 };
 
-// 省略: プロフィール画像の取得は必須ではないため未実装
+export const fetchProfilePicture = async (
+  profilePictureUrl: string,
+  accessToken: string | null
+): Promise<string | null> => {
+  try {
+    const res = await fetch(
+      profilePictureUrl,
+      accessToken
+        ? {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        : undefined
+    );
+    if (!res.ok) return null;
+    const buf = await res.arrayBuffer();
+    const base64 = Buffer.from(buf).toString("base64");
+    return `data:image/jpeg;base64,${base64}`;
+  } catch {
+    return null;
+  }
+};
 
 
 export const options: NextAuthOptions = {

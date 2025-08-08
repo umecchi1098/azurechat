@@ -44,6 +44,8 @@ export const LogIn: FC<LoginProps> = (props) => {
             Basic Auth (DEV ONLY)
           </Button>
         )}
-      </CardContent>
-  </Card>
+        </CardContent>
+      </Card>
+    );
+  };
     
